@@ -13,7 +13,7 @@
     "typescript": "^3.2.1"
   },
   "scripts": {
-    "dev": "react-scripts start",
+    "dev": "CI=false react-scripts start",
     "start": "serve -s build",
     "build": "react-scripts build",
     "gcp-build": "",
