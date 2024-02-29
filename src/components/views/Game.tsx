@@ -31,10 +31,22 @@ const Game = () => {
   // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
   const [users, setUsers] = useState<User[]>(null);
 
-  const logout = (): void => {
+  async function logout() {
+    const response = api.post("/users/logout/"+localStorage.getItem("id"));
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setUsers(response.data);
     localStorage.removeItem("token");
-    navigate("/login");
+    navigate("/");
   };
+
+  const editProfile = () => {
+    navigate("/editprofile");
+  }
+
+  const viewProfile = (id) => {
+    localStorage.setItem("id", id);
+    navigate("/profile");
+  }
 
   // the effect hook can be used to react to change in your component.
   // in this case, the effect hook is only run once, the first time the component is mounted
@@ -85,10 +97,10 @@ const Game = () => {
     content = (
       <div className="game">
         <ul className="game user-list">
-          {users.map((user: User) => (
-            <li key={user.id}>
-              <Player user={user} />
-            </li>
+        {users.map(user => (
+            <div key={user} onClick={() => viewProfile(user.id)}>
+              <Player user={user}/>
+            </div>
           ))}
         </ul>
         <Button width="100%" onClick={() => logout()}>
@@ -100,9 +112,11 @@ const Game = () => {
 
   return (
     <BaseContainer className="game container">
-      <h2>Happy Coding!</h2>
+      <h2>List of Registered Users:</h2>
       <p className="game paragraph">
-        Get all users from secure endpoint:
+        <Button width="100%" onClick={() => editProfile()}>
+          Edit My Profile
+        </Button>
       </p>
       {content}
     </BaseContainer>

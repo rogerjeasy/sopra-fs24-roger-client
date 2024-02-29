@@ -18,6 +18,7 @@ const FormField = (props) => {
     <div className="login field">
       <label className="login label">{props.label}</label>
       <input
+        type={props.type}
         className="login input"
         placeholder="enter here.."
         value={props.value}
@@ -31,30 +32,37 @@ FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
   onChange: PropTypes.func,
+  type: PropTypes.string,
 };
 
 const Login = () => {
   const navigate = useNavigate();
-  const [name, setName] = useState<string>(null);
-  const [username, setUsername] = useState<string>(null);
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(""); 
 
   const doLogin = async () => {
     try {
-      const requestBody = JSON.stringify({ username, name });
-      const response = await api.post("/users", requestBody);
+      const requestBody = JSON.stringify({username, password});
+      const response = await api.post("/users/login", requestBody);
+      console.log(response.data);
+      console.log(response.data["id"]);
+      if (response.data["id"] !== null){
+        // Get the returned user and update a new object.
+        const user = new User(response.data);
 
-      // Get the returned user and update a new object.
-      const user = new User(response.data);
+        // Store the token into the local storage.
+        localStorage.setItem("token", user.token);
+        // localStorage.setItem("id", user.id);
 
-      // Store the token into the local storage.
-      localStorage.setItem("token", user.token);
+        // Login successfully worked --> navigate to the route /game in the GameRouter
+        navigate("/game");
 
-      // Login successfully worked --> navigate to the route /game in the GameRouter
-      navigate("/game");
+      }
+      
     } catch (error) {
-      alert(
-        `Something went wrong during the login: \n${handleError(error)}`
-      );
+      alert("Login failed, invalid username or password. Please try again.");
+      navigate("/")
     }
   };
 
@@ -68,13 +76,14 @@ const Login = () => {
             onChange={(un: string) => setUsername(un)}
           />
           <FormField
-            label="Name"
-            value={name}
-            onChange={(n) => setName(n)}
+            type="password"
+            label="Password"
+            value={password}
+            onChange={(n) => setPassword(n)}
           />
           <div className="login button-container">
             <Button
-              disabled={!username || !name}
+              disabled={!username || !password}
               width="100%"
               onClick={() => doLogin()}
             >
