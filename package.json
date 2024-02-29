@@ -13,9 +13,9 @@
     "typescript": "^3.2.1"
   },
   "scripts": {
-    "dev": "CI=false react-scripts start",
+    "dev": "react-scripts start",
     "start": "serve -s build",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "gcp-build": "",
     "eject": "react-scripts eject",
     "test": "react-scripts test --env=jsdom"
