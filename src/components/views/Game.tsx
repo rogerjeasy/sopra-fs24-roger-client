@@ -97,7 +97,7 @@ const Game = () => {
     content = (
       <div className="game">
         <ul className="game user-list">
-        {users.map(user => (
+          {users.map(user => (
             <div key={user} onClick={() => viewProfile(user.id)}>
               <Player user={user}/>
             </div>

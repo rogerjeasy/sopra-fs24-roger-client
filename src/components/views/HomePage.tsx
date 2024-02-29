@@ -6,37 +6,37 @@ import "styles/views/Game.scss";
 
 const HomePage = () => {
 
-const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const goToLoginPage = () => {
-        navigate("/login");
-    }
+  const goToLoginPage = () => {
+    navigate("/login");
+  }
 
-    const goToRegisterPage = () => {
-        navigate("/register");
-    }
+  const goToRegisterPage = () => {
+    navigate("/register");
+  }
 
-    return (
-        <BaseContainer className="login form">
+  return (
+    <BaseContainer className="login form">
    
-        <Button 
+      <Button 
         width="100%"
         align="center"
         onClick={goToLoginPage}
-        >
+      >
         Login
-        </Button>
+      </Button>
 
-        <br></br>
-        <br></br>
-        <Button
+      <br></br>
+      <br></br>
+      <Button
         width="100%" 
         onClick={goToRegisterPage}
-        >
-        Register
-        </Button>
-        </BaseContainer>
-    )
+      >
+      Register
+      </Button>
+    </BaseContainer>
+  )
 }
 
 export default HomePage;
