@@ -80,7 +80,7 @@ const EditUserProfile = props => {
               width="100%"
               onClick={doEditProfile}
             >
-            dit Profile
+            Save Changes
             </Button>
 
           </div>
