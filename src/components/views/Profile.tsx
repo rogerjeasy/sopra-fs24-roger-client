@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import {api, handleError} from 'helpers/api';
-import {useNavigate} from 'react-router-dom';
-import {Button} from 'components/ui/Button';
-import { Spinner } from 'components/ui/Spinner';
-import 'styles/views/Register.scss';
+import React, { useState, useEffect } from "react";
+import {api, handleError} from "helpers/api";
+import {useNavigate} from "react-router-dom";
+import {Button} from "components/ui/Button";
+import { Spinner } from "components/ui/Spinner";
+import "styles/views/Register.scss";
 import BaseContainer from "components/ui/BaseContainer";
 
 
