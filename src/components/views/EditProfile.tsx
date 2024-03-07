@@ -34,10 +34,9 @@ FormField.propTypes = {
   onChange: PropTypes.func
 };
 
-
 const EditUserProfile = props => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState(null);
   const [birthDay, setBirthDay] = useState("");
 
   const doEditProfile = async () => {
@@ -78,7 +77,7 @@ const EditUserProfile = props => {
             <Button
               disabled={!username && !birthDay}
               width="100%"
-              onClick={doEditProfile}
+              onClick={() => doEditProfile()}
             >
             Save Changes
             </Button>

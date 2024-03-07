@@ -13,16 +13,17 @@ however be sure not to clutter your files with an endless amount!
 As a rule of thumb, use one file per component and only add small,
 specific components that belong to the main one in the same file.
  */
-const FormField = (props) => {
+const FormField = props => {
   return (
     <div className="login field">
-      <label className="login label">{props.label}</label>
+      <label className="login label">
+        {props.label}
+      </label>
       <input
-        type={props.type}
         className="login input"
         placeholder="enter here.."
         value={props.value}
-        onChange={(e) => props.onChange(e.target.value)}
+        onChange={e => props.onChange(e.target.value)}
       />
     </div>
   );
@@ -31,15 +32,13 @@ const FormField = (props) => {
 FormField.propTypes = {
   label: PropTypes.string,
   value: PropTypes.string,
-  onChange: PropTypes.func,
-  type: PropTypes.string,
+  onChange: PropTypes.func
 };
 
 const Login = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(""); 
 
   const doLogin = async () => {
     try {
@@ -53,7 +52,7 @@ const Login = () => {
 
         // Store the token into the local storage.
         localStorage.setItem("token", user.token);
-        // localStorage.setItem("id", user.id);
+        localStorage.setItem("id", user.id);
 
         // Login successfully worked --> navigate to the route /game in the GameRouter
         navigate("/game");
