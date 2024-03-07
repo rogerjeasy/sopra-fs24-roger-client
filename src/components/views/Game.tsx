@@ -29,15 +29,20 @@ const Game = () => {
   // keep its value throughout render cycles.
   // a component can have as many state variables as you like.
   // more information can be found under https://react.dev/learn/state-a-components-memory and https://react.dev/reference/react/useState 
-  const [users, setUsers] = useState<User[]>(null);
+  const [users, setUsers] = useState<User>(null);
 
   async function logout() {
-    const response = api.post("/users/logout/"+localStorage.getItem("id"));
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setUsers(response.data);
-    localStorage.removeItem("token");
-    navigate("/");
-  };
+    try {
+      const response = await api.post("/users/logout/"+localStorage.getItem("id"));
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      setUsers(response.data);
+      localStorage.removeItem("token");
+      navigate("/");
+    } catch (error) {
+      alert("Something went wrong while logging out! See the console for details.");
+    }
+    
+  }
 
   const editProfile = () => {
     navigate("/editprofile");
@@ -61,7 +66,7 @@ const Game = () => {
         // delays continuous execution of an async operation for 1 second.
         // This is just a fake async call, so that the spinner can be displayed
         // feel free to remove it :)
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
         // Get the returned users and update the state.
         setUsers(response.data);

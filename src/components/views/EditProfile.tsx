@@ -37,7 +37,7 @@ FormField.propTypes = {
 
 const EditUserProfile = props => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState(null);
+  const [username, setUsername] = useState("");
   const [birthDay, setBirthDay] = useState("");
 
   const doEditProfile = async () => {
