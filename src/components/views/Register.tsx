@@ -44,11 +44,14 @@ const Register = props => {
       const requestBody = JSON.stringify({username, password});
       const response = await api.post("/users", requestBody);
 
-      if (response.data["id"] !== null) {
-        // const user = new User(response.data);
+      console.log(response.data);
+      console.log(response.data["id"]);
 
-        // localStorage.setItem("token", user.token);
-        // localStorage.setItem("id", user.id);
+      if (response.data["id"] !== null) {
+        const user = new User(response.data);
+
+        localStorage.setItem("token", user.token);
+        localStorage.setItem("id", user.id);
 
         navigate("/game");
       } 
