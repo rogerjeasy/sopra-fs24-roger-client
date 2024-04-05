@@ -44,8 +44,8 @@ const Register = props => {
       const requestBody = JSON.stringify({username, password});
       const response = await api.post("/users", requestBody);
 
-      console.log(response.data);
-      console.log(response.data["id"]);
+      console.log("data from the response--------: "+ response.data);
+      console.log("Id from the data -------------: "+response.data["id"]);
 
       if (response.data["id"] !== null) {
         const user = new User(response.data);
