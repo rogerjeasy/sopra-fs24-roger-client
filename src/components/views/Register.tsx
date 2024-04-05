@@ -53,7 +53,20 @@ const Register = props => {
         navigate("/game");
       } 
     } catch (error) {
-      alert("Registration failed, user name already exists. Please try another user name.");
+      // Check if error is an instance of AxiosError
+      if (error.response) {
+        // Now we can check the status code
+        const statusCode = error.response.status;
+        if (statusCode === 409) {
+          alert("Registration failed, user name already exists. Please try another user name.");
+        } else {
+          // Handle other HTTP statuses or general API errors
+          alert("Registration failed due to an unexpected error. Please try again.");
+        }
+      } else {
+        // Handle non-API errors (e.g., network issues, etc.)
+        alert("An error occurred. Please check your connection and try again.");
+      }
       navigate("/register");
     }
   };
