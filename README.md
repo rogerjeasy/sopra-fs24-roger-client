@@ -1,65 +1,100 @@
-# SoPra FS24 - Client with build pack
+# SoPra FS24 User Management Client
 
-## Getting started:
+A React front end for registering, logging in, browsing registered users and viewing or editing a user profile, written for the individual assignment of the Software Engineering Lab (SoPra) at the University of Zurich, spring semester 2024. It is built on the course's React client template.
 
-Read and go through these Tutorials. It will make your life easier:)
+It talks to the REST API of [sopra-fs24-roger-server](https://github.com/rogerjeasy/sopra-fs24-roger-server).
 
-- Read the React [Docs](https://react.dev/learn)
-- Do this React [Getting Started](https://react.dev/learn/tutorial-tic-tac-toe) Tutorial (it doesn't assume any existing React knowledge)
-- Get an Understanding of [CSS](https://www.w3schools.com/Css/), [SCSS](https://sass-lang.com/documentation/syntax), and [HTML](https://www.w3schools.com/html/html_intro.asp)!
+## Status
 
-Next, there are two other technologies that you should look at:
+The pages are implemented, but the current server does not support all of them: profile editing and logout call endpoints that are commented out on the server, and the server's login endpoint behaves like registration. See [Known gaps](#known-gaps).
 
-* [react-router-dom](https://reactrouter.com/en/main/start/concepts) offers declarative routing for React. It is a collection of navigational components that fit nicely with the application. 
-* [react-hooks](https://blog.logrocket.com/using-hooks-react-router/) let you access the router's state and perform navigation from inside your components.
+## Pages
 
-## Prerequisites and Installation
-For your local development environment, you will need Node.js.\
-We urge you to install the exact version **v20.11.0** which comes with the npm package manager. You can download it [here](https://nodejs.org/download/release/v20.11.0/).\
-If you are confused about which download to choose, feel free to use these direct links:
+Routes are defined in `src/components/routing/routers/AppRouter.js`.
 
-- **MacOS:** [node-v20.11.0.pkg](https://nodejs.org/download/release/v20.11.0/node-v20.11.0.pkg)
-- **Windows 32-bit:** [node-v20.11.0-x86.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x86.msi)
-- **Windows 64-bit:** [node-v20.11.0-x64.msi](https://nodejs.org/download/release/v20.11.0/node-v20.11.0-x64.msi)
-- **Linux:** [node-v20.11.0-linux-x64.tar.xz](node-v20.11.0-linux-x64.tar.xz) (use this [installation guide](https://medium.com/@tgmarinho/how-to-install-node-js-via-binary-archive-on-linux-ab9bbe1dd0c2) if you are new to Linux)
+| Route | View | What it does | API call |
+|---|---|---|---|
+| `/` | `HomePage` | Buttons leading to Login and Register. | |
+| `/register` | `Register` | Username and password form. On success stores the returned `token` and `id` in `localStorage` and opens the dashboard. | `POST /users` |
+| `/login` | `Login` | Username and password form (password is masked). Only reachable without a stored token (`LoginGuard`). | `POST /users/login` |
+| `/game/dashboard` | `Game` | List of registered users; clicking one opens its profile. Buttons for Edit My Profile and Logout. Requires a stored token (`GameGuard`). | `GET /users`, `POST /users/logout/{id}` |
+| `/profile` | `Profile` | Shows username, status, creation date and birthday of the selected user. | `GET /users/{id}` |
+| `/editProfile` | `EditProfile` | New username and a birthday date picker (future dates disabled). | `PUT /users/{id}` |
 
-If you happen to have a package manager the following commands can be used:
+## Tech stack
 
-- **Homebrew:** `brew install node@20.11.0`
-- **Chocolatey:** `choco install nodejs-lts --version=20.11.0`
+- React 18, TypeScript and JavaScript, React Router 6
+- Axios for HTTP (`src/helpers/api.js`), Sass for styles
+- Create React App (`react-scripts` 5), Jest test runner
+- Google App Engine (`app.yaml`), GitHub Actions
 
-After the installation, update the npm package manager to **10.4.0** by running ```npm install -g npm@10.4.0```\
-You can ensure the correct version of node and npm by running ```node -v``` and ```npm --version```, which should give you **v20.11.0** and **10.4.0** respectively.\
-Before you start your application for the first time, run this command to install all other dependencies, including React:
+## Project structure
 
-```npm install```
+```
+src/
+  App.tsx                     header + router
+  components/
+    routing/routers/          AppRouter, GameRouter
+    routing/routeProtectors/  GameGuard, LoginGuard
+    views/                    HomePage, Login, Register, Game, Profile, EditProfile, Header
+    ui/                       Button, BaseContainer, Spinner, ReactLogo
+  helpers/                    api.js (Axios instance, error helper), getDomain.js, isProduction.js
+  models/User.js
+  styles/                     SCSS theme, UI and view styles
+app.yaml                      App Engine static hosting config
+.github/workflows/main.yml    build and deploy workflow
+```
 
-Next, you can start the app with:
+## Getting started
 
-```npm run dev```
+### Prerequisites
 
-Now you can open [http://localhost:3000](http://localhost:3000) to view it in the browser.\
-Notice that the page will reload if you make any edits. You will also see any lint errors in the console (use a Chrome-based browser).\
-The client will send HTTP requests to the server which can be found [here](https://github.com/HASEL-UZH/sopra-fs24-template-server).\
-In order for these requests to work, you need to install and start the server as well.
+- Node.js 20 (`package.json` pins `engines.node` to 20.11.0) with npm
+- The server running locally, see [sopra-fs24-roger-server](https://github.com/rogerjeasy/sopra-fs24-roger-server)
 
-### Testing
-Testing is optional, and you can run the tests with `npm run test`\
-This launches the test runner in an interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Install and run
 
-> For macOS user running into a 'fsevents' error: https://github.com/jest-community/vscode-jest/issues/423
+```bash
+npm install
+npm run dev
+```
 
-### Build
-Finally, `npm run build` builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance:\
-The build is minified, and the filenames include hashes.<br>
+The app opens on http://localhost:3000 and reloads on changes.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Backend URL
 
-## Learn More
+`src/helpers/getDomain.js` picks the API base URL: `http://localhost:8080` in development, and a hard-coded App Engine URL when `NODE_ENV` is `production` (that is, in `npm run build` output). Change the production URL there if you deploy the server elsewhere. There are no other environment variables.
 
-To learn React, check out the [React documentation](https://react.dev/).
+## Scripts
 
+| Command | Purpose |
+|---|---|
+| `npm run dev` | Start the development server on port 3000. |
+| `npm run build` | Production build into `build/`. |
+| `npm start` | Serve `build/` with `serve -s build`. |
+| `npm test` | Run Jest in watch mode (`react-scripts test --env=jsdom`). |
 
-> Thanks to Lucas Pelloni Kyrill Hux and Marco Leder for working on the template.
+The only test is `src/App.test.js`, which checks that the app renders without crashing. On macOS, if you hit an `fsevents` error when running tests, see https://github.com/jest-community/vscode-jest/issues/423.
+
+## Deployment
+
+- `app.yaml` serves the built `build/` folder as static files on the App Engine `nodejs20` runtime, with every unknown path falling back to `index.html` so client-side routes work.
+- `.github/workflows/main.yml` runs `npm install` and `npm run build` on every push to `main`, then deploys to App Engine using a `GCP_SERVICE_CREDENTIALS` repository secret.
+
+The App Engine deployment from the course is no longer running.
+
+## Known gaps
+
+- `PUT /users/{id}` (Edit Profile) and `POST /users/logout/{id}` (Logout) are commented out in the current server (it answers 405 and 404), so these actions fail with an error alert.
+- The server's `POST /users/login` registers new usernames and rejects existing ones, so logging in as an already registered user fails.
+- The server's user response has no `token` field, so the client stores the string `undefined` as its token. The route guards only check that some token exists.
+- `/profile` and `/editProfile` are not guarded. Both use the `id` in `localStorage`, which is overwritten when you open another user's profile from the list, so Edit Profile then targets that user.
+- `Register` shows the "user name already exists" message only for 409, while the server answers 400 for a taken username.
+
+## Context
+
+Built on the React client template from the University of Zurich SoPra course (Software Engineering Lab, FS24), which provided the project setup, base UI components, route guards, Axios helper and App Engine workflow. The registration, profile and edit-profile views and the routing changes are the owner's own work.
+
+## License
+
+Apache License 2.0, see [LICENSE](LICENSE).
